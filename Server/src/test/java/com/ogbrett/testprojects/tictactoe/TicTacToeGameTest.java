@@ -28,22 +28,30 @@ public class TicTacToeGameTest {
 
     @Test
     public void testWrongTurn() {
-        try {
-            game.markO(0, 0);
-            fail();
-        } catch (TTTException e) {
-            assertEquals(TTTException.WRONG_TURN, e.getMessage());
-        }
+        testMarkOException(0, 0, TTTException.WRONG_TURN);
     }
 
     @Test
     public void testAlreadyMarked() throws TTTException {
         game.markX(2, 2);
+        testMarkOException(2, 2, TTTException.ALREADY_MARKED);
+    }
+
+    @Test
+    public void testSquareNotExists() throws TTTException {
+        game.markX(2, 2);
+
+        testMarkOException(3, 2, TTTException.SQUARE_NOT_EXISTS);
+        testMarkOException(2, 3, TTTException.SQUARE_NOT_EXISTS);
+        testMarkOException(-1, 0, TTTException.SQUARE_NOT_EXISTS);
+    }
+
+    private void testMarkOException(int x, int y, String expectedExceptionMessage) {
         try {
-            game.markO(2, 2);
+            game.markO(x, y);
             fail();
         } catch (TTTException e) {
-            assertEquals(TTTException.ALREADY_MARKED, e.getMessage());
+            assertEquals(expectedExceptionMessage, e.getMessage());
         }
     }
 }
