@@ -34,6 +34,9 @@ class TicTacToeGame {
     }
 
     private void validateMarkInput(int x, int y, GameState expectedState) throws TTTException {
+        if (gameState == GameState.X_WON || gameState == GameState.O_WON) {
+            throw new TTTException(TTTException.GAME_ENDED);
+        }
         if (gameState != expectedState) {
             throw new TTTException(TTTException.WRONG_TURN);
         }

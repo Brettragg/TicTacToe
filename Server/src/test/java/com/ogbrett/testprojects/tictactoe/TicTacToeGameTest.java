@@ -47,6 +47,45 @@ public class TicTacToeGameTest {
     }
 
     @Test
+    public void testMarkXGameWonException() throws TTTException {
+        game.markX(0, 1);
+        game.markO(0, 0);
+        game.markX(1, 0);
+        game.markO(1, 1);
+        game.markX(2, 0);
+        game.markO(2, 2);
+        testMarkXException(1, 2, TTTException.GAME_ENDED);
+    }
+
+    @Test
+    public void testMarkOGameWonException() throws TTTException {
+        game.markX(0, 0);
+        game.markO(0, 1);
+        game.markX(1, 1);
+        game.markO(1, 0);
+        game.markX(2, 2);
+        testMarkOException(1, 2, TTTException.GAME_ENDED);
+    }
+
+    private void testMarkXException(int x, int y, String expectedExceptionMessage) {
+        try {
+            game.markX(x, y);
+            fail();
+        } catch (TTTException e) {
+            assertEquals(expectedExceptionMessage, e.getMessage());
+        }
+    }
+
+    private void testMarkOException(int x, int y, String expectedExceptionMessage) {
+        try {
+            game.markO(x, y);
+            fail();
+        } catch (TTTException e) {
+            assertEquals(expectedExceptionMessage, e.getMessage());
+        }
+    }
+
+    @Test
     public void xWinMainDiagonal() throws TTTException {
         game.markX(0, 0);
         game.markO(0, 1);
@@ -179,14 +218,5 @@ public class TicTacToeGameTest {
         game.markO(1, 0);
         game.markX(2, 2);
         assertEquals(GameState.X_WON, game.getState());
-    }
-
-    private void testMarkOException(int x, int y, String expectedExceptionMessage) {
-        try {
-            game.markO(x, y);
-            fail();
-        } catch (TTTException e) {
-            assertEquals(expectedExceptionMessage, e.getMessage());
-        }
     }
 }
