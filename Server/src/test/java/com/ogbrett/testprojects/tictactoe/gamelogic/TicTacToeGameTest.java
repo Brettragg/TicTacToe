@@ -1,4 +1,7 @@
-package com.ogbrett.testprojects.tictactoe;
+package com.ogbrett.testprojects.tictactoe.gamelogic;
+import com.ogbrett.testprojects.tictactoe.gamelogic.GameState;
+import com.ogbrett.testprojects.tictactoe.gamelogic.TTTException;
+import com.ogbrett.testprojects.tictactoe.gamelogic.TicTacToeGame;
 import org.junit.Before;
 import org.junit.Test;
 

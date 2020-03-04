@@ -1,4 +1,4 @@
-package com.ogbrett.testprojects.tictactoe;
+package com.ogbrett.testprojects.tictactoe.gamelogic;
 
 
 class TicTacToeGame {
