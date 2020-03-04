@@ -26,6 +26,8 @@ public class TicTacToeGameTest {
         assertEquals(GameState.X_TURN, game.getState());
     }
 
+
+    //Exception tests
     @Test
     public void testWrongTurn() {
         testMarkOException(0, 0, TTTException.WRONG_TURN);
@@ -54,7 +56,12 @@ public class TicTacToeGameTest {
         game.markO(1, 1);
         game.markX(2, 0);
         game.markO(2, 2);
-        testMarkXException(1, 2, TTTException.GAME_ENDED);
+        try {
+            game.markX(1, 2);
+            fail();
+        } catch (TTTException e) {
+            assertEquals(TTTException.GAME_ENDED, e.getMessage());
+        }
     }
 
     @Test
@@ -67,13 +74,18 @@ public class TicTacToeGameTest {
         testMarkOException(1, 2, TTTException.GAME_ENDED);
     }
 
-    private void testMarkXException(int x, int y, String expectedExceptionMessage) {
-        try {
-            game.markX(x, y);
-            fail();
-        } catch (TTTException e) {
-            assertEquals(expectedExceptionMessage, e.getMessage());
-        }
+    @Test
+    public void testMarkXGameTiedException() throws TTTException {
+        game.markX(0, 0);
+        game.markO(2, 0);
+        game.markX(1, 0);
+        game.markO(0, 1);
+        game.markX(1, 1);
+        game.markO(1, 2);
+        game.markX(2, 1);
+        game.markO(2, 2);
+        game.markX(0, 2);
+        testMarkOException(0, 0, TTTException.GAME_ENDED);
     }
 
     private void testMarkOException(int x, int y, String expectedExceptionMessage) {
@@ -85,6 +97,8 @@ public class TicTacToeGameTest {
         }
     }
 
+
+    //Win condition tests
     @Test
     public void xWinMainDiagonal() throws TTTException {
         game.markX(0, 0);
@@ -218,5 +232,19 @@ public class TicTacToeGameTest {
         game.markO(1, 0);
         game.markX(2, 2);
         assertEquals(GameState.X_WON, game.getState());
+    }
+
+    @Test
+    public void testTie() throws TTTException {
+        game.markX(0, 0);
+        game.markO(2, 0);
+        game.markX(1, 0);
+        game.markO(0, 1);
+        game.markX(1, 1);
+        game.markO(1, 2);
+        game.markX(2, 1);
+        game.markO(2, 2);
+        game.markX(0, 2);
+        assertEquals(GameState.TIE, game.getState());
     }
 }

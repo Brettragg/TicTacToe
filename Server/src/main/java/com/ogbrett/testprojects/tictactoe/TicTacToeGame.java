@@ -16,8 +16,10 @@ class TicTacToeGame {
     void markX(int x, int y) throws TTTException{
         validateMarkInput(x, y, GameState.X_TURN);
         gameField[x][y] = X_MARK;
-        if (diagonalWon(X_MARK) || columnOrRowWon(X_MARK)) {
+        if (won(X_MARK)) {
             gameState = GameState.X_WON;
+        } else if (noMoreFieldSpace()) {
+            gameState = GameState.TIE;
         } else {
             gameState = GameState.O_TURN;
         }
@@ -26,7 +28,7 @@ class TicTacToeGame {
     void markO(int x, int y) throws TTTException{
         validateMarkInput(x, y, GameState.O_TURN);
         gameField[x][y] = O_MARK;
-        if (diagonalWon(O_MARK) || columnOrRowWon(O_MARK)) {
+        if (won(O_MARK)) {
             gameState = GameState.O_WON;
         } else {
             gameState = GameState.X_TURN;
@@ -34,7 +36,7 @@ class TicTacToeGame {
     }
 
     private void validateMarkInput(int x, int y, GameState expectedState) throws TTTException {
-        if (gameState == GameState.X_WON || gameState == GameState.O_WON) {
+        if (gameState == GameState.X_WON || gameState == GameState.O_WON || gameState == GameState.TIE) {
             throw new TTTException(TTTException.GAME_ENDED);
         }
         if (gameState != expectedState) {
@@ -48,22 +50,11 @@ class TicTacToeGame {
         }
     }
 
-    private boolean diagonalWon(int expectedMarks) {
-        boolean localWonMain = true;
-        boolean localWonAnti = true;
-        for (int i = 0; i < DIMENSION; ++i) {
-            if (gameField[i][i] != expectedMarks) {
-                localWonMain = false;
-            }
-            if (gameField[i][DIMENSION - i - 1] != expectedMarks) {
-                localWonAnti = false;
-            }
-        }
-        return localWonMain || localWonAnti;
-    }
+    private boolean won(int expectedMarks) {
+        boolean wonColumnOrRow = false;
+        boolean wonMain = true;
+        boolean wonAnti = true;
 
-    private boolean columnOrRowWon(int expectedMarks) {
-        boolean globalWon = false;
         for (int i = 0; i < DIMENSION; ++i) {
             boolean localWonColumn = true;
             boolean localWonRow = true;
@@ -75,9 +66,29 @@ class TicTacToeGame {
                     localWonRow = false;
                 }
             }
-            globalWon = globalWon || localWonRow || localWonColumn;
+            wonColumnOrRow = wonColumnOrRow || localWonRow || localWonColumn;
+
+            if (gameField[i][i] != expectedMarks) {
+                wonMain = false;
+            }
+            if (gameField[i][DIMENSION - i - 1] != expectedMarks) {
+                wonAnti = false;
+            }
         }
-        return globalWon;
+        return wonColumnOrRow || wonMain || wonAnti;
+    }
+
+
+    private boolean noMoreFieldSpace() {
+        boolean gotSpace = false;
+        for (int i = 0; i < DIMENSION; ++i) {
+            for (int j = 0; j < DIMENSION; ++j) {
+                if (gameField[i][j] != X_MARK && gameField[i][j] != O_MARK) {
+                    gotSpace = true;
+                }
+            }
+        }
+        return !gotSpace;
     }
 
     GameState getState() {
