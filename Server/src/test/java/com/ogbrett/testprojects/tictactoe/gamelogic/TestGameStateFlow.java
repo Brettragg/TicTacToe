@@ -10,7 +10,7 @@ public class TestGameStateFlow {
 
     @Before
     public void setUp() {
-        game = new TicTacToeGame();
+        game = new TicTacToeGameImpl();
     }
 
     @Test
