@@ -56,9 +56,8 @@ class TicTacToeGameImpl implements TicTacToeGame {
 
     private boolean won(int expectedMarks) {
         boolean wonColumnOrRow = false;
-        boolean wonMain = true;
-        boolean wonAnti = true;
-
+        boolean wonMainDiagonal = true;
+        boolean wonAntiDiagonal = true;
         for (int i = 0; i < DIMENSION; ++i) {
             boolean localWonColumn = true;
             boolean localWonRow = true;
@@ -71,15 +70,14 @@ class TicTacToeGameImpl implements TicTacToeGame {
                 }
             }
             wonColumnOrRow = wonColumnOrRow || localWonRow || localWonColumn;
-
             if (gameField[i][i] != expectedMarks) {
-                wonMain = false;
+                wonMainDiagonal = false;
             }
             if (gameField[i][DIMENSION - i - 1] != expectedMarks) {
-                wonAnti = false;
+                wonAntiDiagonal = false;
             }
         }
-        return wonColumnOrRow || wonMain || wonAnti;
+        return wonColumnOrRow || wonMainDiagonal || wonAntiDiagonal;
     }
 
     private boolean noMoreFieldSpace() {
