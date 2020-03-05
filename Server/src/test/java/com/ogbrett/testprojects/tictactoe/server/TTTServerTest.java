@@ -138,8 +138,8 @@ public class TTTServerTest {
         message.setJMSReplyTo(replyQueue);
         message.setCorrelationId("something");
         message.setStringProperty("Request", "Status");
-        messageProducer.send(message);
-        Message replyMessage = messageReplyConsumer.receiveNoWait();
+        messageProducer.send(message, DeliveryMode.PERSISTENT, 9, 20);
+        Message replyMessage = messageReplyConsumer.receive(20);
         assertNull(replyMessage);
     }
 }
