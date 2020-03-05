@@ -6,44 +6,66 @@ import com.ogbrett.testprojects.tictactoe.server.mock.MessageResponderTextMock;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQMessage;
 import org.apache.activemq.command.ActiveMQQueue;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.*;
 
 import javax.jms.*;
 
 import static org.junit.Assert.*;
 
 public class TTTServerTest {
-    private TTTServer server;
     private static String TEST_URI = "tcp://localhost:61617";
     private static Queue TEST_QUEUE = new ActiveMQQueue("TestQueue");
+    private static ConnectionFactory CONNECTION_FACTORY = new ActiveMQConnectionFactory(TEST_URI);
 
-    @Before
-    public void setUp() throws Exception {
+    private static TTTServer server;
+
+    private Connection connection;
+    private Session session;
+    private Queue replyQueue;
+    private MessageProducer messageProducer;
+    private MessageConsumer messageReplyConsumer;
+
+    @BeforeClass
+    public static void globalSetUp() throws Exception {
         server = new TTTServer(TEST_URI);
     }
 
-    @After
-    public void tearDown() throws Exception {
+    @AfterClass
+    public static void globalTearDown() throws Exception {
         server.close();
     }
 
-    @Test
-    public void testStart() throws Exception {
-        assertFalse(server.isStarted());
-        try {
-            server.start();
-            assertTrue(server.isStarted());
-        } finally {
+    @Before
+    public void localSetUp() throws Exception {
+        server.start();
+        connection = CONNECTION_FACTORY.createConnection();
+        session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
+        replyQueue = session.createTemporaryQueue();
+        messageProducer = session.createProducer(TEST_QUEUE);
+        messageReplyConsumer = session.createConsumer(replyQueue);
+        connection.start();
+    }
+
+    @After
+    public void localTearDown() throws Exception {
+        connection.stop();
+        messageReplyConsumer.close();
+        messageProducer.close();
+        session.close();
+        connection.close();
+        if (server.isStarted()) {
             server.stop();
         }
-        assertFalse(server.isStarted());
+        server.clearMessageResponders();
+    }
+
+    @Test
+    public void testStart() {
+        assertTrue(server.isStarted());
     }
 
     @Test
     public void testException() throws Exception {
-        server.start();
         try {
             server.start();
             fail();
@@ -63,66 +85,61 @@ public class TTTServerTest {
     @Test
     public void receiveReply() throws Exception {
         server.addMessageResponder(new MessageResponderStatusMock(), TEST_QUEUE);
-        server.start();
-        ConnectionFactory connFactory = new ActiveMQConnectionFactory(TEST_URI);
-        Connection connection = connFactory.createConnection();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        Queue replyQueue = session.createTemporaryQueue();
-        MessageProducer messageProducer = session.createProducer(TEST_QUEUE);
-        MessageConsumer messageReplyConsumer = session.createConsumer(replyQueue);
-        connection.start();
-        try {
-            ActiveMQMessage message = new ActiveMQMessage();
-            message.setJMSReplyTo(replyQueue);
-            message.setCorrelationId("something");
-            message.setStringProperty("Request", "Status");
-            messageProducer.send(message);
-            Message replyMessage = messageReplyConsumer.receive(1000);
-            assertEquals("OK", replyMessage.getStringProperty("Status"));
-        } finally {
-            connection.stop();
-            messageReplyConsumer.close();
-            messageProducer.close();
-            session.close();
-            connection.close();
-            server.stop();
-        }
+        ActiveMQMessage message = new ActiveMQMessage();
+        message.setJMSReplyTo(replyQueue);
+        message.setCorrelationId("something");
+        message.setStringProperty("Request", "Status");
+        messageProducer.send(message);
+        Message replyMessage = messageReplyConsumer.receive(1000);
+        assertEquals("OK", replyMessage.getStringProperty("Status"));
+
     }
 
     @Test
     public void multipleResponders() throws Exception {
         server.addMessageResponder(new MessageResponderTextMock(), TEST_QUEUE);
         server.addMessageResponder(new MessageResponderStatusMock(), TEST_QUEUE);
+        ActiveMQMessage message = new ActiveMQMessage();
+
+        message.setJMSReplyTo(replyQueue);
+        message.setCorrelationId("something");
+        message.setStringProperty("Request", "Status");
+        messageProducer.send(message);
+        Message replyMessage = messageReplyConsumer.receive(1000);
+        assertEquals("OK", replyMessage.getStringProperty("Status"));
+        message.clearProperties();
+        message.setJMSReplyTo(replyQueue);
+        message.setCorrelationId("somethingelse");
+        message.setStringProperty("Request", "Text");
+        messageProducer.send(message);
+        replyMessage = messageReplyConsumer.receive(1000);
+        assertEquals("sample text", replyMessage.getStringProperty("Text"));
+    }
+
+    @Test
+    public void startTwice() throws Exception {
+        server.stop();
+        server.addMessageResponder(new MessageResponderStatusMock(), TEST_QUEUE);
         server.start();
-        ConnectionFactory connFactory = new ActiveMQConnectionFactory(TEST_URI);
-        Connection connection = connFactory.createConnection();
-        Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        Queue replyQueue = session.createTemporaryQueue();
-        MessageProducer messageProducer = session.createProducer(TEST_QUEUE);
-        MessageConsumer messageReplyConsumer = session.createConsumer(replyQueue);
-        connection.start();
-        try {
-            ActiveMQMessage message = new ActiveMQMessage();
-            message.setJMSReplyTo(replyQueue);
-            message.setCorrelationId("something");
-            message.setStringProperty("Request", "Status");
-            messageProducer.send(message);
-            message.clearProperties();
-            message.setJMSReplyTo(replyQueue);
-            message.setCorrelationId("somethingelse");
-            message.setStringProperty("Request", "Text");
-            messageProducer.send(message);
-            Message replyMessage = messageReplyConsumer.receive();
-            assertEquals("OK", replyMessage.getStringProperty("Status"));
-            replyMessage = messageReplyConsumer.receive(1000);
-            assertEquals("sample text", replyMessage.getStringProperty("Text"));
-        } finally {
-            connection.stop();
-            messageReplyConsumer.close();
-            messageProducer.close();
-            session.close();
-            connection.close();
-            server.stop();
-        }
+        ActiveMQMessage message = new ActiveMQMessage();
+        message.setJMSReplyTo(replyQueue);
+        message.setCorrelationId("something");
+        message.setStringProperty("Request", "Status");
+        messageProducer.send(message);
+        Message replyMessage = messageReplyConsumer.receive(1000);
+        assertEquals("OK", replyMessage.getStringProperty("Status"));
+    }
+
+    @Test
+    public void testClear() throws Exception {
+        server.addMessageResponder(new MessageResponderStatusMock(), TEST_QUEUE);
+        server.clearMessageResponders();
+        ActiveMQMessage message = new ActiveMQMessage();
+        message.setJMSReplyTo(replyQueue);
+        message.setCorrelationId("something");
+        message.setStringProperty("Request", "Status");
+        messageProducer.send(message);
+        Message replyMessage = messageReplyConsumer.receiveNoWait();
+        assertNull(replyMessage);
     }
 }

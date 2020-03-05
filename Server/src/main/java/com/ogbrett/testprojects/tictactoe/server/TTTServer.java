@@ -59,11 +59,16 @@ public class TTTServer implements StartStoppable, AutoCloseable {
 
     @Override
     public void close() throws Exception {
+        clearMessageResponders();
+        connection.close();
+        brokerService.stop();
+    }
+
+    void clearMessageResponders() throws JMSException {
         for (Pair<Session, MessageConsumer> pair : sessionConsumerList) {
             pair.getValue().close();
             pair.getKey().close();
         }
-        connection.close();
-        brokerService.stop();
+        sessionConsumerList.clear();
     }
 }
