@@ -1,4 +1,4 @@
-package com.ogbrett.testprojects.tictactoe.gamelogic;
+package com.ogbrett.testprojects.tictactoe.core.gamelogic;
 
 public interface TicTacToeGame {
     void markX(int x, int y) throws TTTException;

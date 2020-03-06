@@ -1,5 +1,6 @@
-package com.ogbrett.testprojects.tictactoe.gamelogic;
+package com.ogbrett.testprojects.tictactoe.core.gamelogic;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -46,7 +47,7 @@ public class TestExceptionThrows {
             game.markX(1, 2);
             fail();
         } catch (TTTException e) {
-            assertEquals(TTTException.GAME_ENDED, e.getMessage());
+            Assert.assertEquals(TTTException.GAME_ENDED, e.getMessage());
         }
     }
 
@@ -79,7 +80,7 @@ public class TestExceptionThrows {
             game.markO(x, y);
             fail();
         } catch (TTTException e) {
-            assertEquals(expectedExceptionMessage, e.getMessage());
+            Assert.assertEquals(expectedExceptionMessage, e.getMessage());
         }
     }
 

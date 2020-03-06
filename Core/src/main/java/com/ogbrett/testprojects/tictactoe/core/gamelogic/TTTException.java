@@ -1,4 +1,4 @@
-package com.ogbrett.testprojects.tictactoe.gamelogic;
+package com.ogbrett.testprojects.tictactoe.core.gamelogic;
 
 class TTTException extends Exception {
 
