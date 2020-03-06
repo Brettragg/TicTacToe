@@ -1,6 +1,6 @@
 package com.ogbrett.testprojects.tictactoe.core.gamelogic;
 
-class TTTException extends Exception {
+public class TTTException extends Exception {
 
     static String WRONG_TURN = "Trying to mark on someone else's turn";
     static String ALREADY_MARKED = "The spot you want to mark is already marked";

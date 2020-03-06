@@ -12,4 +12,11 @@
     <artifactId>tictactoe.server</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.ogbrett.testprojects</groupId>
+            <artifactId>tictactoe.core</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
 </project>

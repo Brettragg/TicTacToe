@@ -4,7 +4,7 @@ public class TTTMarkRequest extends TTTRequest {
     private int x;
     private int y;
 
-    TTTMarkRequest(String login, int x, int y) {
+    public TTTMarkRequest(String login, int x, int y) {
         super(login);
         this.x = x;
         this.y = y;

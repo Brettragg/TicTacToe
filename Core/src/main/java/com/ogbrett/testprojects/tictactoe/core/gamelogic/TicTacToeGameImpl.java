@@ -1,14 +1,14 @@
 package com.ogbrett.testprojects.tictactoe.core.gamelogic;
 
 
-class TicTacToeGameImpl implements TicTacToeGame {
+public class TicTacToeGameImpl implements TicTacToeGame {
     private static final int DIMENSION = 3;
     private static final int X_MARK = 1;
     private static final int O_MARK = 2;
     private GameState gameState;
     private int[][] gameField;
 
-    TicTacToeGameImpl() {
+    public TicTacToeGameImpl() {
         gameState = GameState.X_TURN;
         gameField = new int[DIMENSION][DIMENSION];
     }

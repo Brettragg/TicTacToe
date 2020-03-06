@@ -5,7 +5,7 @@ import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTRequest;
 public class TTTResponse {
     private TTTRequest request;
     private Status status;
-    TTTResponse(TTTRequest request, Status status) {
+    public TTTResponse(TTTRequest request, Status status) {
         this.request = request;
         this.status = status;
     }

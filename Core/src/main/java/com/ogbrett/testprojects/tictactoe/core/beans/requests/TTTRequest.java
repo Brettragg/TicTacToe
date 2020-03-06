@@ -11,6 +11,9 @@ public abstract class TTTRequest {
     public final RequestType getRequestType() {
         return requestType;
     }
+    public String getLogin() {
+        return login;
+    }
 
     public enum RequestType {
         CONNECTION, MARK, STATE
