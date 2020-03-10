@@ -1,6 +1,8 @@
 package com.ogbrett.testprojects.tictactoe.core.beans.requests;
 
-public abstract class TTTRequest {
+import java.io.Serializable;
+
+public abstract class TTTRequest implements Serializable {
     RequestType requestType;
     private String login;
 

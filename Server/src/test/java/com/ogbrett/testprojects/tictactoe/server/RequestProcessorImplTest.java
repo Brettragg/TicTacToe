@@ -14,12 +14,12 @@ import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTRespons
 import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.*;
 import static org.junit.Assert.assertEquals;
 
-public class RequestProcessorTest {
-    private RequestProcessor requestProcessor;
+public class RequestProcessorImplTest {
+    private RequestProcessorImpl requestProcessorImpl;
 
     @Before
     public void setUp() {
-        requestProcessor = new RequestProcessor(new TicTacToeGameMock());
+        requestProcessorImpl = new RequestProcessorImpl(new TicTacToeGameMock());
     }
 
     @Test
@@ -62,21 +62,21 @@ public class RequestProcessorTest {
 
     private void connectionRequest(String login, Status expectedStatus) {
         TTTRequest request = new TTTConnectionRequest(login);
-        TTTResponse response = requestProcessor.processRequest(request);
+        TTTResponse response = requestProcessorImpl.processRequest(request);
         assertEquals(expectedStatus, response.getStatus());
         assertEquals(request, response.getRequest());
     }
 
     private void markRequest(String login, int x, int y, Status expectedStatus) {
         TTTRequest markRequest = new TTTMarkRequest(login, x, y);
-        TTTResponse markResponse = requestProcessor.processRequest(markRequest);
+        TTTResponse markResponse = requestProcessorImpl.processRequest(markRequest);
         assertEquals(markRequest, markResponse.getRequest());
         assertEquals(expectedStatus, markResponse.getStatus());
     }
 
     private void stateRequest(String login, PlayerState expectedState) {
         TTTRequest stateRequest = new TTTStateRequest(login);
-        TTTStateResponse stateResponse = (TTTStateResponse)requestProcessor.processRequest(stateRequest);
+        TTTStateResponse stateResponse = (TTTStateResponse) requestProcessorImpl.processRequest(stateRequest);
         assertEquals(stateRequest, stateResponse.getRequest());
         assertEquals(Status.OK, stateResponse.getStatus());
         assertEquals(expectedState, stateResponse.getPlayerState());
