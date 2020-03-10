@@ -45,14 +45,18 @@ class RequestProcessor {
     }
 
     private TTTResponse processStateRequest(TTTStateRequest request) {
-        if (xTurn(game) && isXPlayer(request)|| oTurn(game) && isOPlayer(request)) {
-            return new TTTStateResponse(request, Status.OK, PlayerState.YOUR_TURN);
-        } else if (oTurn(game) && isXPlayer(request) || xTurn(game) && isOPlayer(request)) {
-            return new TTTStateResponse(request, Status.OK, PlayerState.OPPONENTS_TURN);
-        } else if (game.getState() == GameState.X_WON && isXPlayer(request) || game.getState() == GameState.O_WON && isOPlayer(request)) {
-            return new TTTStateResponse(request, Status.OK, PlayerState.WON);
-        } else if (game.getState() == GameState.X_WON && isOPlayer(request) || game.getState() == GameState.O_WON && isXPlayer(request)) {
-            return new TTTStateResponse(request, Status.OK, PlayerState.LOST);
+        return processStateRequestWithRole(request, isXPlayer(request));
+    }
+
+    private TTTResponse processStateRequestWithRole(TTTStateRequest request, boolean isX) {
+        if (xTurn(game)) {
+            return new TTTStateResponse(request, Status.OK, isX? PlayerState.YOUR_TURN : PlayerState.OPPONENTS_TURN);
+        } else if (oTurn(game)) {
+            return new TTTStateResponse(request, Status.OK, isX? PlayerState.OPPONENTS_TURN : PlayerState.YOUR_TURN);
+        } else if (game.getState() == GameState.X_WON) {
+            return new TTTStateResponse(request, Status.OK, isX? PlayerState.WON : PlayerState.LOST);
+        } else if (game.getState() == GameState.O_WON) {
+            return new TTTStateResponse(request, Status.OK, isX? PlayerState.LOST : PlayerState.WON);
         } else {
             return new TTTStateResponse(request, Status.ERROR, null);
         }
