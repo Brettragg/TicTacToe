@@ -13,8 +13,8 @@ import com.ogbrett.testprojects.tictactoe.core.gamelogic.TicTacToeGameImpl;
 
 import java.util.Objects;
 
-import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse.Status.*;
-import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.PlayerState.*;
+import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse.*;
+import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.*;
 
 class RequestProcessor {
     private TicTacToeGame game = new TicTacToeGameImpl();
@@ -39,20 +39,20 @@ class RequestProcessor {
         } else {
             login2 = request.getLogin();
         }
-        return new TTTResponse(request, OK);
+        return new TTTResponse(request, Status.OK);
     }
 
     private TTTResponse processStateRequest(TTTStateRequest request) {
         if (xTurn(game) && isXPlayer(request)|| oTurn(game) && isOPlayer(request)) {
-            return new TTTStateResponse(request, OK, YOUR_TURN);
+            return new TTTStateResponse(request, Status.OK, PlayerState.YOUR_TURN);
         } else if (oTurn(game) && isXPlayer(request) || xTurn(game) && isOPlayer(request)) {
-            return new TTTStateResponse(request, OK, OPPONENTS_TURN);
+            return new TTTStateResponse(request, Status.OK, PlayerState.OPPONENTS_TURN);
         } else if (game.getState() == GameState.X_WON && isXPlayer(request) || game.getState() == GameState.O_WON && isOPlayer(request)) {
-            return new TTTStateResponse(request, OK, WON);
+            return new TTTStateResponse(request, Status.OK, PlayerState.WON);
         } else if (game.getState() == GameState.X_WON && isOPlayer(request) || game.getState() == GameState.O_WON && isXPlayer(request)) {
-            return new TTTStateResponse(request, OK, LOST);
+            return new TTTStateResponse(request, Status.OK, PlayerState.LOST);
         } else {
-            return new TTTStateResponse(request, ERROR, null);
+            return new TTTStateResponse(request, Status.ERROR, null);
         }
     }
 
@@ -63,9 +63,9 @@ class RequestProcessor {
             } else if (isOPlayer(request)) {
                 game.markO(request.getX(), request.getY());
             }
-            return new TTTResponse(request, OK);
+            return new TTTResponse(request, Status.OK);
         } catch (TTTException e) {
-            return new TTTResponse(request, ERROR);
+            return new TTTResponse(request, Status.ERROR);
         }
     }
 
