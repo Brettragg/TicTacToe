@@ -36,8 +36,10 @@ class RequestProcessor {
     private TTTResponse processConnectionRequest(TTTConnectionRequest request) {
         if (login1 == null) {
             login1 = request.getLogin();
-        } else {
+        } else if (!login1.equals(request.getLogin())){
             login2 = request.getLogin();
+        } else {
+            return new TTTResponse(request, Status.ERROR);
         }
         return new TTTResponse(request, Status.OK);
     }
