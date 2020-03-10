@@ -17,9 +17,14 @@ import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTRespons
 import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.*;
 
 class RequestProcessor {
-    private TicTacToeGame game = new TicTacToeGameImpl();
+    private TicTacToeGame game;
     private String login1;
     private String login2;
+
+    RequestProcessor(TicTacToeGame game) {
+        this.game = game;
+    }
+
     TTTResponse processRequest(TTTRequest request) {
         switch (request.getRequestType()) {
             case CONNECTION:

@@ -6,6 +6,7 @@ import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTStateRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse;
 import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse;
+import com.ogbrett.testprojects.tictactoe.server.mocks.TicTacToeGameMock;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,7 +19,7 @@ public class RequestProcessorTest {
 
     @Before
     public void setUp() {
-        requestProcessor = new RequestProcessor();
+        requestProcessor = new RequestProcessor(new TicTacToeGameMock());
     }
 
     @Test
@@ -38,34 +39,18 @@ public class RequestProcessorTest {
     @Test
     public void testMarkError() {
         connectionRequest("123123", Status.OK);
-        markRequest("123123", 4, 100, Status.ERROR); //out of gamefield
+        markRequest("123123", 3, 3, Status.ERROR); //out of gamefield
     }
 
     @Test
-    public void testP1Win() {
+    public void testWin() {
         connectionRequest("login1", Status.OK);
         connectionRequest("login2", Status.OK);
         markRequest("login1", 0, 0, Status.OK);
         markRequest("login2", 1, 2, Status.OK);
-        markRequest("login1", 1, 1, Status.OK);
-        markRequest("login2", 2, 1, Status.OK);
-        markRequest("login1", 2, 2, Status.OK);
+        markRequest("login1", 0, 1, Status.OK);
         stateRequest("login1", PlayerState.WON);
         stateRequest("login2", PlayerState.LOST);
-    }
-
-    @Test
-    public void testP2Win() {
-        connectionRequest("login1", Status.OK);
-        connectionRequest("login2", Status.OK);
-        markRequest("login1", 0, 1, Status.OK);
-        markRequest("login2", 0, 0, Status.OK);
-        markRequest("login1", 1, 0, Status.OK);
-        markRequest("login2", 1, 1, Status.OK);
-        markRequest("login1", 2, 1, Status.OK);
-        markRequest("login2", 2, 2, Status.OK);
-        stateRequest("login1", PlayerState.LOST);
-        stateRequest("login2", PlayerState.WON);
     }
 
     @Test
