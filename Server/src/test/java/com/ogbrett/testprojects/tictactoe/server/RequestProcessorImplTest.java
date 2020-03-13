@@ -25,13 +25,17 @@ public class RequestProcessorImplTest {
     @Test
     public void testMark() {
         connectionRequest("123123", Status.OK);
+        connectionRequest("123124", Status.OK);
         markRequest("123123", 1, 1, Status.OK);
     }
 
     @Test
     public void testStates() {
         connectionRequest("123123", Status.OK);
+        stateRequest("123123", PlayerState.WAITING_FOR_SECOND_PLAYER);
+        connectionRequest("123124", Status.OK);
         stateRequest("123123", PlayerState.YOUR_TURN);
+        stateRequest("123124", PlayerState.OPPONENTS_TURN);
         markRequest("123123", 1, 1, Status.OK);
         stateRequest("123123", PlayerState.OPPONENTS_TURN);
     }

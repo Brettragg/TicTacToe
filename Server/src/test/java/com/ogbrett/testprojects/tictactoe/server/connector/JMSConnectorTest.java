@@ -17,7 +17,7 @@ public class JMSConnectorTest {
     private static final String QUEUE_NAME = "TEST_QUEUE";
     @Test
     public void test() throws Exception {
-        JMSConnector jmsConnector =  new JMSConnector("tcp://localhost:61613", QUEUE_NAME, new RequestProcessorMock());
+        JMSServerConnector jmsServerConnector =  new JMSServerConnector("tcp://localhost:61613", QUEUE_NAME, new RequestProcessorMock());
         ActiveMQConnectionFactory connFactory = new ActiveMQConnectionFactory("tcp://localhost:61613");
         connFactory.setTrustedPackages(Collections.singletonList("com.ogbrett.testprojects.tictactoe"));
         Connection connection = connFactory.createConnection();
@@ -44,6 +44,6 @@ public class JMSConnectorTest {
         replyConsumer.close();
         session.close();
         connection.close();
-        jmsConnector.close();
+        jmsServerConnector.close();
     }
 }

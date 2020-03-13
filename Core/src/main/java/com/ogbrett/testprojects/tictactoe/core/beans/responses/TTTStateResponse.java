@@ -16,6 +16,6 @@ public class TTTStateResponse extends TTTResponse {
     }
 
     public enum PlayerState {
-        YOUR_TURN, OPPONENTS_TURN, WON, LOST
+        WAITING_FOR_SECOND_PLAYER, YOUR_TURN, OPPONENTS_TURN, WON, LOST
     }
 }

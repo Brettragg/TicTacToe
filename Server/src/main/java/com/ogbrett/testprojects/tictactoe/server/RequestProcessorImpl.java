@@ -9,19 +9,18 @@ import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse;
 import com.ogbrett.testprojects.tictactoe.core.gamelogic.GameState;
 import com.ogbrett.testprojects.tictactoe.core.gamelogic.TTTException;
 import com.ogbrett.testprojects.tictactoe.core.gamelogic.TicTacToeGame;
-import com.ogbrett.testprojects.tictactoe.core.gamelogic.TicTacToeGameImpl;
 
 import java.util.Objects;
 
-import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse.*;
-import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.*;
+import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse.Status;
+import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.PlayerState;
 
-class RequestProcessorImpl implements RequestProcessor {
+public class RequestProcessorImpl implements RequestProcessor {
     private TicTacToeGame game;
     private String login1;
     private String login2;
 
-    RequestProcessorImpl(TicTacToeGame game) {
+    public RequestProcessorImpl(TicTacToeGame game) {
         this.game = game;
     }
 
@@ -50,6 +49,9 @@ class RequestProcessorImpl implements RequestProcessor {
     }
 
     private TTTResponse processStateRequest(TTTStateRequest request) {
+        if (login2 == null) {
+            return new TTTStateResponse(request, Status.OK, PlayerState.WAITING_FOR_SECOND_PLAYER);
+        }
         return processStateRequestWithRole(request, isXPlayer(request));
     }
 
