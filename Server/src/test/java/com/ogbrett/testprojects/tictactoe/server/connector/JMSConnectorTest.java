@@ -4,20 +4,14 @@ import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTConnectionReque
 import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse;
 import com.ogbrett.testprojects.tictactoe.server.mocks.RequestProcessorMock;
-import org.apache.activemq.ActiveMQConnection;
 import org.apache.activemq.ActiveMQConnectionFactory;
-import org.apache.activemq.broker.BrokerService;
-import org.apache.activemq.command.ActiveMQMessage;
-import org.apache.activemq.command.ActiveMQObjectMessage;
-import org.apache.activemq.command.ActiveMQQueue;
 import org.junit.Test;
 
 import javax.jms.*;
-
-import java.net.URI;
 import java.util.Collections;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 public class JMSConnectorTest {
     private static final String QUEUE_NAME = "TEST_QUEUE";
