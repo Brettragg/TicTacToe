@@ -40,7 +40,7 @@ public class RequestProcessorImpl implements RequestProcessor {
     private TTTResponse processConnectionRequest(TTTConnectionRequest request) {
         if (login1 == null) {
             login1 = request.getLogin();
-        } else if (!login1.equals(request.getLogin())){
+        } else if (login2 == null && !login1.equals(request.getLogin())){
             login2 = request.getLogin();
         } else {
             return new TTTResponse(request, Status.ERROR);

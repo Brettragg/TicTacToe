@@ -63,6 +63,12 @@ public class RequestProcessorImplTest {
         connectionRequest("login1", Status.ERROR);
     }
 
+    @Test
+    public void testSameSecondLogin() {
+        connectionRequest("login1", Status.OK);
+        connectionRequest("login2", Status.OK);
+        connectionRequest("login2", Status.ERROR);
+    }
 
     private void connectionRequest(String login, Status expectedStatus) {
         TTTRequest request = new TTTConnectionRequest(login);
