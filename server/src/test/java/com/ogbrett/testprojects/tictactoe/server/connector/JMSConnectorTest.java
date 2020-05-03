@@ -15,8 +15,9 @@ import static org.junit.Assert.assertNull;
 
 public class JMSConnectorTest {
     private static final String QUEUE_NAME = "TEST_QUEUE";
+
     @Test
-    public void test() throws Exception {
+    public void testSuccess() throws Exception {
         JMSServerConnector jmsServerConnector =  new JMSServerConnector("tcp://localhost:61613", QUEUE_NAME, new RequestProcessorMock());
         ActiveMQConnectionFactory connFactory = new ActiveMQConnectionFactory("tcp://localhost:61613");
         connFactory.setTrustedPackages(Collections.singletonList("com.ogbrett.testprojects.tictactoe"));
