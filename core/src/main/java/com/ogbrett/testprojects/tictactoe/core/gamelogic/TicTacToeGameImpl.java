@@ -6,7 +6,7 @@ public class TicTacToeGameImpl implements TicTacToeGame {
     private static final int X_MARK = 1;
     private static final int O_MARK = 2;
     private GameState gameState;
-    private int[][] gameField;
+    private final int[][] gameField;
 
     public TicTacToeGameImpl() {
         gameState = GameState.X_TURN;
@@ -86,6 +86,7 @@ public class TicTacToeGameImpl implements TicTacToeGame {
             for (int j = 0; j < DIMENSION; ++j) {
                 if (gameField[i][j] != X_MARK && gameField[i][j] != O_MARK) {
                     gotSpace = true;
+                    break;
                 }
             }
         }

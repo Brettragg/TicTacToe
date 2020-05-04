@@ -16,7 +16,7 @@ import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTRespons
 import static com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse.PlayerState;
 
 public class RequestProcessorImpl implements RequestProcessor {
-    private TicTacToeGame game;
+    private final TicTacToeGame game;
     private String login1;
     private String login2;
 
