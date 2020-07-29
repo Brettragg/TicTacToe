@@ -1,6 +1,7 @@
 package com.ogbrett.testprojects.tictactoe.server.connector;
 
 import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTRequest;
+import com.ogbrett.testprojects.tictactoe.core.utils.TTTUtils;
 import com.ogbrett.testprojects.tictactoe.server.RequestProcessor;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.broker.BrokerService;
@@ -21,7 +22,7 @@ public class JMSServerConnector implements Closeable {
     private final MessageConsumer consumer;
     private final MessageProducer producer;
 
-    public JMSServerConnector(String uri, String queueName, RequestProcessor requestProcessor) throws Exception {
+    public JMSServerConnector(String uri, RequestProcessor requestProcessor) throws Exception {
         logger.info("Starting JMSServerConnector");
         broker = new BrokerService();
         broker.setBrokerName("TicTacToeJMSBroker");
@@ -31,7 +32,7 @@ public class JMSServerConnector implements Closeable {
         connFactory.setTrustedPackages(Collections.singletonList("com.ogbrett.testprojects.tictactoe"));
         connection = connFactory.createConnection();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        consumer = session.createConsumer(session.createQueue(queueName));
+        consumer = session.createConsumer(session.createQueue(TTTUtils.QUEUE_NAME));
         producer = session.createProducer(null);
         consumer.setMessageListener(requestMessage -> {
             try {

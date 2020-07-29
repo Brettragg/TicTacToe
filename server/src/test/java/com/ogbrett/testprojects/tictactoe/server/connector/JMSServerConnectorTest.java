@@ -3,6 +3,7 @@ package com.ogbrett.testprojects.tictactoe.server.connector;
 import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTConnectionRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse;
+import com.ogbrett.testprojects.tictactoe.core.utils.TTTUtils;
 import com.ogbrett.testprojects.tictactoe.server.mocks.RequestProcessorMock;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.junit.Test;
@@ -14,17 +15,15 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class JMSServerConnectorTest {
-    private static final String QUEUE_NAME = "TEST_QUEUE";
-
     @Test
     public void testSuccess() throws Exception {
-        JMSServerConnector jmsServerConnector =  new JMSServerConnector("tcp://localhost:61613", QUEUE_NAME, new RequestProcessorMock());
+        JMSServerConnector jmsServerConnector =  new JMSServerConnector("tcp://localhost:61613", new RequestProcessorMock());
         ActiveMQConnectionFactory connFactory = new ActiveMQConnectionFactory("tcp://localhost:61613");
         connFactory.setTrustedPackages(Collections.singletonList("com.ogbrett.testprojects.tictactoe"));
         Connection connection = connFactory.createConnection();
         Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
         Destination replyDest = session.createTemporaryQueue();
-        Destination dest = session.createQueue(QUEUE_NAME);
+        Destination dest = session.createQueue(TTTUtils.QUEUE_NAME);
         MessageConsumer replyConsumer = session.createConsumer(replyDest);
         MessageProducer producer = session.createProducer(dest);
         ObjectMessage message = session.createObjectMessage();

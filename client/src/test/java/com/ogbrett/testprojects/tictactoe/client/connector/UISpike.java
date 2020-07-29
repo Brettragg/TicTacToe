@@ -3,7 +3,6 @@ package com.ogbrett.testprojects.tictactoe.client.connector;
 import org.junit.Test;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 

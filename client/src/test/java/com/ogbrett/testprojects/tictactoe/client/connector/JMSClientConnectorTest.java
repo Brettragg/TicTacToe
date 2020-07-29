@@ -18,11 +18,10 @@ import static org.junit.Assert.fail;
 public class JMSClientConnectorTest {
     private Closeable jmsServer;
     private static final String URI = "tcp://localhost:61618";
-    private static final String QUEUE_NAME = "TestQueue";
 
     @Before
     public void setUp() throws Exception {
-        jmsServer = new JMSServerConnector(URI, QUEUE_NAME, new RequestProcessorImpl(new TicTacToeGameImpl()));
+        jmsServer = new JMSServerConnector(URI, new RequestProcessorImpl(new TicTacToeGameImpl()));
     }
     @After
     public void tearDown() throws IOException {
@@ -30,9 +29,9 @@ public class JMSClientConnectorTest {
     }
     @Test
     public void integrationTest() throws Exception {
-        ClientConnector clientConnectorX = new JMSClientConnector(URI, QUEUE_NAME, "login1");
+        ClientConnector clientConnectorX = new JMSClientConnector(URI, "login1");
         assertEquals(TTTStateResponse.PlayerState.WAITING_FOR_SECOND_PLAYER, clientConnectorX.getState());
-        ClientConnector clientConnectorO = new JMSClientConnector(URI, QUEUE_NAME, "login2");
+        ClientConnector clientConnectorO = new JMSClientConnector(URI, "login2");
         assertEquals(TTTStateResponse.PlayerState.YOUR_TURN, clientConnectorX.getState());
         clientConnectorX.mark(0, 0);
         assertEquals(TTTStateResponse.PlayerState.OPPONENTS_TURN, clientConnectorX.getState());

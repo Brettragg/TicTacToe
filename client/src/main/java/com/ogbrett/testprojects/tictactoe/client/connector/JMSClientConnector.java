@@ -6,6 +6,7 @@ import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.requests.TTTStateRequest;
 import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTResponse;
 import com.ogbrett.testprojects.tictactoe.core.beans.responses.TTTStateResponse;
+import com.ogbrett.testprojects.tictactoe.core.utils.TTTUtils;
 import org.apache.activemq.ActiveMQConnectionFactory;
 import org.apache.activemq.command.ActiveMQObjectMessage;
 
@@ -22,19 +23,17 @@ public class JMSClientConnector implements ClientConnector {
     private final Session session;
     private final MessageProducer producer;
     private final MessageConsumer replyConsumer;
-    private final Queue queue;
     private final String login;
     private final TemporaryQueue replyQueue;
 
-    JMSClientConnector(String uri, String queueName, String login) throws JMSException {
+    public JMSClientConnector(String uri, String login) throws JMSException {
         this.login = login;
         ActiveMQConnectionFactory connFactory = new ActiveMQConnectionFactory(uri);
         connFactory.setTrustedPackages(Collections.singletonList("com.ogbrett.testprojects.tictactoe"));
         connection = connFactory.createConnection();
         session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
-        queue = session.createQueue(queueName);
         replyQueue = session.createTemporaryQueue();
-        producer = session.createProducer(queue);
+        producer = session.createProducer(session.createQueue(TTTUtils.QUEUE_NAME));
         replyConsumer = session.createConsumer(replyQueue);
         connection.start();
         sendRequest(new TTTConnectionRequest(login));
