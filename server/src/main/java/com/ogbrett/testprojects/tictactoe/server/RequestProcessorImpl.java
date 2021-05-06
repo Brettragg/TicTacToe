@@ -33,7 +33,7 @@ public class RequestProcessorImpl implements RequestProcessor {
             case MARK:
                 return processMarkRequest((TTTMarkRequest)request);
             default:
-                throw new RuntimeException("Unsupported request type");
+                throw new RuntimeException("Unsupported request type"); // TODO: 3/29/2021 respond with an error
         }
     }
 
